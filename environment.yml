@@ -1,0 +1,11 @@
+name: DummyEnv
+channels:
+  - defaults
+dependencies:
+  - python=3.7
+  - mysql-connector-python
+  - flask
+  - flask-restful
+  - pip:
+    - numpy
+    - pandas
