@@ -1,6 +1,7 @@
 import ast
 import json
 import os
+import sys
 import re
 
 import mysql.connector
@@ -10,7 +11,6 @@ from flask import (Blueprint, Flask, flash, jsonify, redirect, render_template,
 from flask_restful import Api, Resource, reqparse
 from werkzeug.datastructures import FileStorage
 from werkzeug.exceptions import HTTPException
-from openpyxl import load_workbook
 
 # UPLOAD_FOLDER = 'C:\\Patriot\\DDServiceAPI\\uploads'
 # ALLOWED_CONTENT_TYPE = set(['image/jpg', 'image/jpeg'])
@@ -21,16 +21,16 @@ app.secret_key = 'secretkey'
 app.config['JSON_SORT_KEYS'] = False
 api = Api(app)
 
-def conf_database():
-    """Function to return the database configuration set in database.json
+# def conf_database():
+#     """Function to return the database configuration set in database.json
 
-    Returns:
-        data (dict): dict with json info
-    """
-    filename = os.path.join("C:\LSSApps\ManagersForecasting\database.json")
-    with open(filename) as f:
-        data = json.load(f)
-    return data
+#     Returns:
+#         data (dict): dict with json info
+#     """
+#     filename = os.path.join("C:\LSSApps\ManagersForecasting\database.json")
+#     with open(filename) as f:
+#         data = json.load(f)
+#     return data
 
 # class results(Resource):
 #     """Class with a GET request handler to fetch the Fabrication Continuation Status.
@@ -123,16 +123,19 @@ def login():
         user_name = request.form['username']
         password = request.form['password']
 
-        cdb = conf_database()                                                                                                               # connect to database and create cursor
-        mydb = mysql.connector.connect(
-            host= cdb['host'],
-            user= cdb['user'],
-            password= cdb['password'],
-            database= cdb['database']
-        )
-        mycursor = mydb.cursor()
-        mycursor.execute('SELECT * FROM users WHERE user = %s AND password = %s', (user_name, password,))
-        account = mycursor.fetchone()
+        # cdb = conf_database()                                                                                                               # connect to database and create cursor
+        # mydb = mysql.connector.connect(
+        #     host= cdb['host'],
+        #     user= cdb['user'],
+        #     password= cdb['password'],
+        #     database= cdb['database']
+        # )
+        # mycursor = mydb.cursor()
+        # mycursor.execute('SELECT * FROM users WHERE user = %s AND password = %s', (user_name, password,))
+        # account = mycursor.fetchone()
+        with open ("data/user.txt","a") as f:
+            f.write(user_name)
+        account = [user_name, password]
         if account:
             session['loggedin'] = True
             session['id'] = account[0]
@@ -149,26 +152,26 @@ def register():
         user_name = request.form['username']
         password = request.form['password']
         email = request.form['email']
-        cdb = conf_database()                                                                                                               # connect to database and create cursor
-        mydb = mysql.connector.connect(
-            host= cdb['host'],
-            user= cdb['user'],
-            password= cdb['password'],
-            database= cdb['database']
-        )
-        mycursor = mydb.cursor()
-        mycursor.execute('SELECT * FROM users WHERE user = %s', (user_name,))
-        account = mycursor.fetchone()
-        if account:
-            msg = 'Account already exists!'
-        elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
-            msg = 'Invalid email address!'
-        elif not re.match(r'^[A-Za-z0-9]+$', user_name):
-            msg = 'Username must contain only characters and numbers!'
-        else:
-            mycursor.execute('INSERT INTO users VALUES (NULL, %s, %s, %s)', (user_name, password, email,))
-            mydb.commit()
-            msg = 'You have successfully registered!'
+        # cdb = conf_database()                                                                                                               # connect to database and create cursor
+        # mydb = mysql.connector.connect(
+        #     host= cdb['host'],
+        #     user= cdb['user'],
+        #     password= cdb['password'],
+        #     database= cdb['database']
+        # )
+        # mycursor = mydb.cursor()
+        # mycursor.execute('SELECT * FROM users WHERE user = %s', (user_name,))
+        # account = mycursor.fetchone()
+        # if account:
+        #     msg = 'Account already exists!'
+        # elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+        #     msg = 'Invalid email address!'
+        # elif not re.match(r'^[A-Za-z0-9]+$', user_name):
+        #     msg = 'Username must contain only characters and numbers!'
+        # else:
+        #     mycursor.execute('INSERT INTO users VALUES (NULL, %s, %s, %s)', (user_name, password, email,))
+        #     mydb.commit()
+        #     msg = 'You have successfully registered!'
     return render_template('template_register.html', msg=msg)
 
 @app.route('/dashboard/logout')
@@ -179,24 +182,30 @@ def logout():
     # Redirect to login page
     return redirect(url_for('login'))
 
-@app.route('/dashboard/home')
+@app.route('/dashboard/home', methods=['GET','POST'])
 def home():
     if 'loggedin' in session:
-        cdb = conf_database()                                                                                                               # connect to database and create cursor
-        mydb = mysql.connector.connect(
-            host= cdb['host'],
-            user= cdb['user'],
-            password= cdb['password'],
-            database= cdb['database']
-        )
-        mycursor = mydb.cursor()
+        # cdb = conf_database()                                                                                                               # connect to database and create cursor
+        # mydb = mysql.connector.connect(
+        #     host= cdb['host'],
+        #     user= cdb['user'],
+        #     password= cdb['password'],
+        #     database= cdb['database']
+        # )
+        # mycursor = mydb.cursor()
 
-        # mycursor.execute(f"select * from parts where status=100 order by id desc limit 5")                                                  # select everything from the specific part
-        book = load_workbook("C:\\Users\\H483882\\OneDrive - Honeywell\\Desktop\\dummyhours.xlsx")
-        sheet = book.active
-        results = pd.DataFrame(sheet.values)
-        results.fillna('', inplace=True)
-        return render_template('template.html', sheet= results.to_html())
+        # # mycursor.execute(f"select * from parts where status=100 order by id desc limit 5")                                                  # select everything from the specific part
+        # book = load_workbook("C:\\Users\\H483882\\OneDrive - Honeywell\\Desktop\\dummyhours.xlsx")
+        # sheet = book.active
+        # results = pd.DataFrame(sheet.values)
+        # results.fillna('', inplace=True)
+        # return render_template('template.html', sheet= results.to_html())
+        if request.method == 'POST' and 'message' in request.form:
+            message = request.form['message']
+            with open ("data/messages.txt","a") as f:
+                f.write(message)
+            print(message, file=sys.stderr)
+        return render_template('template.html')
     return redirect(url_for('login'))
 
 @app.route('/dashboard/stats')

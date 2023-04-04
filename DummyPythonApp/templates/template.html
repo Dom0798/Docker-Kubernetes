@@ -4,7 +4,7 @@
   <link rel="stylesheet" href='/static/main.css'>
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
   <div class="top">
-    Defect Analysis Dashboard
+    Dummy Dashboard
   </div>
   <div class="sidebar">
     <a href="{{ url_for('home') }}" class="active">
@@ -18,31 +18,10 @@
     </a>
   </div>
   <div class="main">
-    <table class="table">
-      <thead>
-      <tr>
-          <th>ID</th>
-          <th>Status</th>
-          <th>Form Factor</th>
-          <th>Datetime</th>
-          <th>Result</th>
-          <th>Defects</th>
-          <th>Path</th>
-      </tr>
-      </thead>
-      <tbody>
-        {% for item in data %}
-          <tr>
-            <td>{{item[1]}}</td>
-            <td>{{item[2]}}</td>
-            <td>{{item[3]}}</td>
-            <td>{{item[4]}}</td>
-            <td>{{item[5]}}</td>
-            <td>{{item[6]}}</td>
-            <td>{{item[7]}}</td>
-          </tr>
-        {% endfor %}
-      </tbody>
+    <form action="{{ url_for('home') }}" method="post">
+      <input type="message" name="message" placeholder="Message" id="message" required>
+      <input type="submit" value="Message">
+    </form>
   </table>
   </div>
 </html>
