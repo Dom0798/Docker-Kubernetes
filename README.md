@@ -56,3 +56,17 @@ Once a repo is created in the DockerHub page and the image is has the same name,
 To pull an image, use `docker pull IMAGE_NAME:TAG`.
 
 To login to your DockerHub account, run `docker login` and enter credentials.
+
+### Volumes
+To create a named volume, in the `docker run`command you should add `-v NAMED_VOL:/path/of/data`.
+
+List the volumes with `docker volume ls`.
+
+To remove anonymous volumes, use `docker volume prune`.
+
+### Bind Mounts
+For dev purposes, we can use a second volume flag to provide a bind mount as follows: `-v "SOURCE/CODE/PATH:/DEST/CODE/PATH"`. With this, changes in source code can be seen in active container.
+
+We can add a `:ro`at the end to specify the container to use this folder as a read-only source.
+
+You may want to add anonymous volumes after to prioritize internal folder such as read-write folders or dependencies folders.
