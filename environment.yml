@@ -1,3 +1,4 @@
+# use conda env export --no-builds --from-history > environment.yml and then add the pip installs
 name: DummyEnv
 channels:
   - defaults

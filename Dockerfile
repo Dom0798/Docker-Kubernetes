@@ -2,7 +2,8 @@
 FROM continuumio/miniconda3
 
 # set virtual root dir
-COPY . /app
+WORKDIR /app
+COPY environment.yml /app
 RUN conda env create -f /app/environment.yml
 # to run commands inside env
 SHELL ["conda", "run", "-n", "DummyEnv", "/bin/bash", "-c"]
@@ -13,6 +14,8 @@ SHELL ["conda", "run", "-n", "DummyEnv", "/bin/bash", "-c"]
 RUN echo "Make sure dependencies worked:"
 RUN python -c 'import flask'
 
+# to optimize, copy everything else after the env (so if code changed, just use cached env)
+COPY . /app
 # set virtual working dir
 WORKDIR /app/DummyPythonApp
 
