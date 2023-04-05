@@ -36,4 +36,4 @@ EXPOSE ${PORT}
 # VOLUME [ "/app/DummyPythonApp/data" ]
 
 # code to run when container starts, flag to get stdout and stderr (CMD or ENTRYPOINT)
-ENTRYPOINT ["conda", "run", "--no-capture-output", "-n", "DummyEnv", "python", "api.py"]
+ENTRYPOINT ["conda", "run", "--no-capture-output", "-n", "DummyEnv", "python", "app.py"]
