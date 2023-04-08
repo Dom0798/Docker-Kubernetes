@@ -78,4 +78,13 @@ If you want a container that connects to your local database (for example, mysql
 #### Container to container
 Use `docker container inspect IMAGE_NAME` command with the database container that you are using and search for the IP adress in the network settings.
 
-An easier way to do this is to use Container Networks. With `docker network create NETWORK_NAME`, create a network; after this, run the database container addin the *--network NETWORK_NAME* flag. In the connection code, you should use the database container name as host.
+An easier way to do this is to use Container Networks. With `docker network create NETWORK_NAME`, create a network; after this, run the database container adding the *--network NETWORK_NAME* flag. In the connection code, you should use the database container name as host.
+
+## Troubleshooting
+### mySQL
+If ever having a problem about caching_sha2_password, execute the following commands:
+```
+$ docker exec -it mysql bash    # if executing db in a container
+$ mysql -u root -p
+$ ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'your password here';
+```
