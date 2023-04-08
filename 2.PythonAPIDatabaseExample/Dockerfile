@@ -1,6 +1,9 @@
 # This example can be run with:
-# docker build -t apiapp .
-# docker run -d -p 5000:5000 --rm --env-file .env -v "C:\Docker+Kubernetes\Docker-Kubernetes\2.PythonAPIDatabaseExample:/app" --name apiapp apiapp:latest
+# First, run the database:
+# docker run --name mysql --rm -d --env-file .env -v datamysql:/var/lib/mysql --network APIbridge mysql
+# then
+# docker build -t apiapp:network .
+# docker run -d -p 5000:5000 --rm --env-file .env --network APIbridge -v "C:\Docker+Kubernetes\Docker-Kubernetes\2.PythonAPIDatabaseExample:/app" --name apiapp apiapp:network
 
 # use miniconda for env
 FROM continuumio/miniconda3
@@ -21,9 +24,6 @@ COPY . /app
 
 # expose a port
 EXPOSE ${PORT}
-
-# save txts in anonymous volumes
-# VOLUME [ "/app/DummyPythonApp/data" ]
 
 # code to run when container starts, flag to get stdout and stderr (CMD or ENTRYPOINT)
 ENTRYPOINT ["conda", "run", "--no-capture-output", "-n", "DummyEnv", "python", "api.py"]

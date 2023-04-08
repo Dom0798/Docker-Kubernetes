@@ -87,4 +87,30 @@ api.add_resource(getfromdb, '/get/<string:poke_name>')
 api.add_resource(posttodb, '/post')
 
 if __name__ == '__main__':
+    cdb = conf_database()                                                                                                               # connect to database and create cursor
+    mydb = mysql.connector.connect(
+        host= cdb['host'],
+        user= cdb['user'],
+        password= cdb['password']
+    )
+    mycursor = mydb.cursor()
+
+    try:
+        mycursor.execute('CREATE DATABASE IF NOT EXISTS pokemons')
+        mydb.database = 'pokemons'
+    except Exception as e:
+        print(e)
+
+    try:
+        mycursor.execute('''
+        CREATE TABLE IF NOT EXISTS `fav_pokemons` (
+        `id` int NOT NULL AUTO_INCREMENT,
+        `poke_name` char(20) NOT NULL,
+        `is_fav` tinyint NOT NULL,
+        PRIMARY KEY (`id`)
+        )''')
+        mydb.commit()
+    except Exception as e:
+        print(e)
+
     app.run(host= '0.0.0.0', port= os.environ.get('PORT'), debug=True)
