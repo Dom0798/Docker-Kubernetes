@@ -80,6 +80,13 @@ Use `docker container inspect IMAGE_NAME` command with the database container th
 
 An easier way to do this is to use Container Networks. With `docker network create NETWORK_NAME`, create a network; after this, run the database container adding the *--network NETWORK_NAME* flag. In the connection code, you should use the database container name as host.
 
+### Dockerfile and docker compose yml
+See Dockerfile and docker-compose.yml files in this repo to understand them.
+To run a docker compose file in detached mode, use `docker compose up -d`. For taking it down, use `docker compose down`.
+
+### Useful docker commands
+- `docker exec -it CONTAINER_NAME command`: let's you run a command and communicate with the running container content
+
 ## Troubleshooting
 ### mySQL
 If ever having a problem about caching_sha2_password, execute the following commands:
