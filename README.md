@@ -87,6 +87,34 @@ To run a docker compose file in detached mode, use `docker compose up -d`. For t
 ### Useful docker commands
 - `docker exec -it CONTAINER_NAME command`: let's you run a command and communicate with the running container content
 
+### Deployment in AWS
+#### EC2 instance
+If on Windows, use PuTTY to connect to your EC2 instance:
+1. Use PuTTygen to change the .pem to .ppk:
+    1. Load the .pem
+    2. Use RSA and click on Save private key
+2. Use PuTTY to connect:
+    1. On host name use the instance DNS
+    2. Use port 22
+    3. On Connection>SSH>Auth, load the .ppk
+    4. Click Open.
+
+#### Install Docker in EC2
+1. Run the following:
+```
+$ sudo yum update -y
+$ sudo yum -y install docker
+$ sudo service docker start
+$ sudo usermod -a -G docker ec2-user
+```
+2. Log out, then log in again and run:
+```
+$ sudo systemctl enable docker
+$ sudo systemctl start docker
+$ sudo systemctl status docker
+```
+Everything should have been succesful.
+
 ## Troubleshooting
 ### mySQL
 If ever having a problem about caching_sha2_password, execute the following commands:
