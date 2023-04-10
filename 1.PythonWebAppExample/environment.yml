@@ -1,0 +1,11 @@
+# use conda env export --no-builds --from-history > environment.yml and then add the pip installs
+name: DummyEnv
+channels:
+  - defaults
+dependencies:
+  - python=3.7
+  - flask
+  - flask-restful
+  - pip:
+    - numpy
+    - pandas
