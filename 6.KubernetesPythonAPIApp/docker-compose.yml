@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  stories:
+    build: ./
+    image: stories
+    volumes:
+      - stories:/app/story
+    env_file:
+      - .env
+    ports:
+      - 5000:5000
+
+volumes:
+  stories:

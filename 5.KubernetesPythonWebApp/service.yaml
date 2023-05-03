@@ -1,0 +1,20 @@
+# specify apiVersion
+apiVersion: v1
+
+# specify what to create
+kind: Service
+
+metadata:
+  name: second-app-service
+
+spec:
+  # select apps to be exposed
+  selector:
+    app: kub-second-app
+  ports:
+    - protocol: 'TCP'
+      # port on your machine
+      port: 80
+      # port in the container
+      targetPort: 5000
+  type: LoadBalancer

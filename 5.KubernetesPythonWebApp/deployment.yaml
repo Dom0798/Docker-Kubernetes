@@ -1,0 +1,42 @@
+# specify apiVersion
+apiVersion: apps/v1
+
+# specify what to create
+kind: Deployment
+
+# data
+metadata:
+  name: second-app
+
+# specs of deployment
+spec:
+  # number of pods
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kub-second-app
+    # matchExpressions:
+    #   # select a pod with label in value list
+    #   - {key: app, operator: In, values: [kub-second-app, kub-first-app]}
+  # define the pod
+  template:
+    metadata:
+      labels:
+        app: kub-second-app
+    # specs of pod
+    spec:
+      containers:
+        - name: second-node
+          image: dommort/kub-first-app:2
+          # specify if should pull latest image regarding tag
+          imagePullPolicy: Always
+          # specify liveness check
+          livenessProbe:
+            httpGet: 
+              path: /
+              # port exposed by container
+              port: 5000
+            # freq to do a liveness check
+            periodSeconds: 10
+            # delay when to start liveness
+            initialDelaySeconds: 5

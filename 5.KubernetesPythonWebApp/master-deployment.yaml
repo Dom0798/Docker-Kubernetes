@@ -1,0 +1,48 @@
+# specify apiVersion
+apiVersion: v1
+
+# specify what to create
+kind: Service
+
+metadata:
+  name: second-app-service
+
+spec:
+  # select apps to be exposed
+  selector:
+    app: kub-second-app
+  ports:
+    - protocol: 'TCP'
+      # port on your machine
+      port: 80
+      # port in the container
+      targetPort: 5000
+  type: LoadBalancer
+---
+# specify apiVersion
+apiVersion: apps/v1
+
+# specify what to create
+kind: Deployment
+
+# data
+metadata:
+  name: second-app
+
+# specs of deployment
+spec:
+  # number of pods
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kub-second-app
+  # define the pod
+  template:
+    metadata:
+      labels:
+        app: kub-second-app
+    # specs of pod
+    spec:
+      containers:
+        - name: second-node
+          image: dommort/kub-first-app:2

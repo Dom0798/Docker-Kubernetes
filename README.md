@@ -115,6 +115,59 @@ $ sudo systemctl status docker
 ```
 Everything should have been succesful.
 
+## Kubernetes
+### Install
+When using Docker Destop, just go to the settings to the Kubernetes tab, enable it and wait to the install to complete.
+Use `kubectl get nodes` command to check if it is installed.
+
+### Deployment object creation
+To create an object in your cluster, use `kubectl create deployment NAME --image=IMAGE_NAME`. Note: the image should be at Docker Hub.
+With this, we create a master node connected to a worker node with the container of the image in the args.
+
+### Service object creation
+In order to expose a pod, you should use `kubectl expose deployment NAME_DEPLOYMENT --type=LoadBalancer --port=PORT_NUMBER`.
+We are using a LoadBalancer to take advantage of the scaling features and don't use only a NodePort.
+
+### Scaling
+To run several instances of a pod, use `kubectl scale deployment/DEPLOYMENT_NAME --replicas=NUMBER_TO_SCALE`
+
+### Updating
+To update a deployment, you should use `kubectl set image deployment/DEPLOYMENT_NAME CURRENT_CONTAINER_NAME=IMAGE_NAME`. Note: it will only update if the new image has a different tag.
+
+### Rollback
+To do a rollback, you can use `kubectl rollout undo deployment/DEPLOYMENT_NAME`. This will undo the latest deployment.
+
+If you want to go to a specific revision you can use the following commands:
+```
+# get revisions
+$ kubectl rollout history deployment/DEPLOYMENT_NAME
+# rollback to one of those revisions
+$ kubectl rollout undo deployment/DEPLOYMENT_NAME --to-revision=NUM_REVISION
+```
+
+### Declarative approach (or yaml file)
+See deployment.yaml and service.yaml files in this repo to understand them.
+
+To run them, use `kubectl apply -f NAME_OF_FILE.yaml`.
+
+In order to update, just make the changes in the file and use the same command.
+
+Deleting the resources created by this should be done with `kubectl delete -f NAME_OF_FILE.yaml`.
+
+### Dashboard
+In order to use the dashboard, you should deploy the UI with:
+```
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
+```
+Run the port exposure with `kubectl proxy` and now you can access the UI in http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
+
+To create a token, use the following commands and paste the token generated in the web page:
+```
+$ kubectl apply -f dashboard-adminuser.yaml
+$ kubectl -n kubernetes-dashboard create token admin-user
+```
+
+
 ## Troubleshooting
 ### mySQL
 If ever having a problem about caching_sha2_password, execute the following commands:
@@ -122,4 +175,10 @@ If ever having a problem about caching_sha2_password, execute the following comm
 $ docker exec -it mysql bash    # if executing db in a container
 $ mysql -u root -p
 $ ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'your password here';
+```
+
+### Clean up Docker WSL disk space
+To clean the virtual disk space, use the following command:
+```
+Optimize-VHD -Path "C:\Path\to\AppData\Local\Docker\wsl\data\ext4.vhdx" -Mode Full
 ```
